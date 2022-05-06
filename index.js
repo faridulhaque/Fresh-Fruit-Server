@@ -30,6 +30,15 @@ async function run(){
             const fruit = await fruitCollection.findOne(query);
             res.send(fruit);
         })
+        app.get('/myItems', async (req, res) =>{
+            const email = req.query.email;
+            
+            const query = {email: email};
+            const cursor = fruitCollection.find(query);
+            const fruits = await cursor.toArray();
+            res.send(fruits);
+        })
+        
 
         app.put('/fruit/:id', async(req, res) =>{
             const id = req.params.id;
@@ -39,6 +48,8 @@ async function run(){
             const updatedDoc = {
                 $set: {
                     quantity: updatedInfo.quantity,
+                    
+                    sold: updatedInfo.sold,
                     
                 }
             };
@@ -51,6 +62,7 @@ async function run(){
             const result = await fruitCollection.insertOne(newItem);
             res.send(result);
         })
+       
         app.delete('/fruit/:id', async (req, res) =>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
